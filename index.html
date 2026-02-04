@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Will You Be My Valentine?</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
     margin:0;
@@ -17,8 +19,9 @@ body{
 
 .card{
     position:relative;
-    width:420px;
-    height:300px;
+    width:90%;
+    max-width:420px;
+    height:320px;
     background:white;
     border-radius:20px;
     box-shadow:0 10px 30px rgba(0,0,0,0.2);
@@ -29,6 +32,7 @@ body{
 
 h1{
     color:#ff4d88;
+    font-size:22px;
 }
 
 button{
@@ -61,40 +65,42 @@ button{
 </div>
 
 <script>
-// -------- NO BUTTON FLOAT INSIDE CARD --------
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 
-let x = 250;
-let y = 180;
+// Initial position
+moveNoButton();
 
-noBtn.style.left = x + "px";
-noBtn.style.top = y + "px";
+// ---- DESKTOP: run from mouse ----
+card.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const dx = rect.left - e.clientX;
+    const dy = rect.top - e.clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
 
-card.addEventListener("mousemove", function(e){
-    const btnRect = noBtn.getBoundingClientRect();
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-
-    const dx = btnRect.left - mouseX;
-    const dy = btnRect.top - mouseY;
-
-    if(Math.sqrt(dx*dx + dy*dy) < 120){
-        x += dx * 0.2;
-        y += dy * 0.2;
-
-        const maxX = card.offsetWidth - btnRect.width - 10;
-        const maxY = card.offsetHeight - btnRect.height - 10;
-
-        x = Math.max(10, Math.min(maxX, x));
-        y = Math.max(80, Math.min(maxY, y));
-
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
+    if(dist < 100){
+        moveNoButton();
     }
 });
 
-// -------- YES BUTTON GUARANTEED SEQUENCE --------
+// ---- MOBILE: jump on touch ----
+card.addEventListener("touchstart", () => {
+    moveNoButton();
+});
+
+// Function to move inside card
+function moveNoButton(){
+    const maxX = card.offsetWidth - noBtn.offsetWidth - 20;
+    const maxY = card.offsetHeight - noBtn.offsetHeight - 20;
+
+    const newX = Math.random() * maxX + 10;
+    const newY = Math.random() * maxY + 60;
+
+    noBtn.style.left = newX + "px";
+    noBtn.style.top = newY + "px";
+}
+
+// ---- YES BUTTON ----
 document.getElementById("yes").addEventListener("click", function(){
 
     document.body.innerHTML = "";
@@ -108,14 +114,15 @@ document.getElementById("yes").addEventListener("click", function(){
     const msg = document.createElement("h1");
     msg.innerText = "Now you're stuck with me, baby 😈";
     msg.style.color = "#ff4d88";
-    msg.style.fontSize = "48px";
+    msg.style.fontSize = "40px";
+    msg.style.textAlign = "center";
 
     document.body.appendChild(msg);
 
     setTimeout(() => {
         const img = document.createElement("img");
-        img.src = "evil.jpg?v=2";   // version breaker
-        img.style.maxWidth = "70%";
+        img.src = "evil.jpg?v=5";
+        img.style.maxWidth = "80%";
         img.style.borderRadius = "20px";
         img.style.marginTop = "30px";
         document.body.appendChild(img);
