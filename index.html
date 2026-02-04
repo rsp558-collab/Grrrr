@@ -1,30 +1,33 @@
 <script>
 const noBtn = document.getElementById('no');
+const card = document.querySelector('.card');
 
-let btnX = 200;
-let btnY = 200;
+let btnX = 150;
+let btnY = 120;
 
+noBtn.style.position = 'absolute';
 noBtn.style.left = btnX + 'px';
 noBtn.style.top = btnY + 'px';
 
-document.addEventListener('mousemove', function(e) {
+card.addEventListener('mousemove', function(e) {
+    const cardRect = card.getBoundingClientRect();
+    const btnRect = noBtn.getBoundingClientRect();
+
     const mouseX = e.clientX;
     const mouseY = e.clientY;
 
-    const rect = noBtn.getBoundingClientRect();
-    const dx = mouseX - rect.left;
-    const dy = mouseY - rect.top;
-
+    const dx = mouseX - btnRect.left;
+    const dy = mouseY - btnRect.top;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // If mouse comes within 120px, move button away smoothly
-    if (distance < 120) {
-        btnX += (rect.left - mouseX) * 0.3;
-        btnY += (rect.top - mouseY) * 0.3;
+    // If mouse gets close, move button
+    if (distance < 100) {
+        btnX += (btnRect.left - mouseX) * 0.5;
+        btnY += (btnRect.top - mouseY) * 0.5;
 
-        // Keep button inside screen
-        btnX = Math.max(0, Math.min(window.innerWidth - noBtn.offsetWidth, btnX));
-        btnY = Math.max(0, Math.min(window.innerHeight - noBtn.offsetHeight, btnY));
+        // Keep inside card boundaries
+        btnX = Math.max(10, Math.min(cardRect.width - btnRect.width - 10, btnX));
+        btnY = Math.max(10, Math.min(cardRect.height - btnRect.height - 10, btnY));
 
         noBtn.style.left = btnX + 'px';
         noBtn.style.top = btnY + 'px';
