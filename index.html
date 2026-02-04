@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Will You Be My Valentine?</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -68,10 +67,10 @@ button{
 const noBtn = document.getElementById("no");
 const card = document.getElementById("card");
 
-// Initial position
-moveNoButton();
+// Initial placement
+moveNo();
 
-// ---- DESKTOP: run from mouse ----
+// DESKTOP: mouse near
 card.addEventListener("mousemove", (e) => {
     const rect = noBtn.getBoundingClientRect();
     const dx = rect.left - e.clientX;
@@ -79,28 +78,35 @@ card.addEventListener("mousemove", (e) => {
     const dist = Math.sqrt(dx*dx + dy*dy);
 
     if(dist < 100){
-        moveNoButton();
+        moveNo();
     }
 });
 
-// ---- MOBILE: jump on touch ----
-card.addEventListener("touchstart", () => {
-    moveNoButton();
+// MOBILE: intercept tap BEFORE it registers
+noBtn.addEventListener("touchstart", function(e){
+    e.preventDefault();  // stop tap
+    moveNo();
 });
 
-// Function to move inside card
-function moveNoButton(){
+// Also block normal click just in case
+noBtn.addEventListener("click", function(e){
+    e.preventDefault();
+    moveNo();
+});
+
+// Function to move button inside card
+function moveNo(){
     const maxX = card.offsetWidth - noBtn.offsetWidth - 20;
     const maxY = card.offsetHeight - noBtn.offsetHeight - 20;
 
     const newX = Math.random() * maxX + 10;
-    const newY = Math.random() * maxY + 60;
+    const newY = Math.random() * maxY + 70;
 
     noBtn.style.left = newX + "px";
     noBtn.style.top = newY + "px";
 }
 
-// ---- YES BUTTON ----
+// YES button
 document.getElementById("yes").addEventListener("click", function(){
 
     document.body.innerHTML = "";
@@ -121,7 +127,7 @@ document.getElementById("yes").addEventListener("click", function(){
 
     setTimeout(() => {
         const img = document.createElement("img");
-        img.src = "evil.jpg?v=5";
+        img.src = "evil.jpg?v=7";
         img.style.maxWidth = "80%";
         img.style.borderRadius = "20px";
         img.style.marginTop = "30px";
